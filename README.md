@@ -57,4 +57,4 @@ Equivalent of:
 ```
 hub pull-request -o -m "${MESSAGE}"
 ```
-Maybe try [Go Github](https://github.com/google/go-github)
+Maybe try [Go Github](https://github.com/google/go-github) or [githubql](https://github.com/shurcooL/githubql)
