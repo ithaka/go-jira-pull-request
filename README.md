@@ -1,6 +1,21 @@
 # go-jira-pull-request
 Utility that creates a github pull request with github markdown translated from JIRA story.
 
+## Setup
+
+Install Go.
+
+If desired, add the following lines to your bash_profile:
+```bash
+# Work with and use Go
+export PATH=$PATH:$(go env GOPATH)/bin
+export GOPATH=$(go env GOPATH)
+```
+
+To clone this repo, you can simply use `go get github.com/ithaka/go-jira-pull-request`. Doing so initializes the repo in your `$GOPATH`, which makes a number of things about development significantly easier.
+
+You can run `cd $GOPATH/src/github.com/ithaka/go-jira-pull-request/is_a_git_repo ; go install` to install the command `is_a_git_repo`. If you've added the the above lines to your bash profile, you should be able to run that from anywhere and get a very simple output about if the directory you run it from is or is inside of a git repo
+
 
 ## Tasks
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // Man, I go no unit test!
@@ -13,6 +14,6 @@ func Pwd() string {
 		fmt.Fprintln(os.Stderr, "There was an error running the command: ", err)
 		return ""
 	} else {
-	    return string(cmdOut)
+	    return strings.TrimSpace(string(cmdOut))
 	}
 }
