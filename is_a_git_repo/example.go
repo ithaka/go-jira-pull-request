@@ -1,3 +1,4 @@
+//usr/bin/env gorun $0;exit $?;
 package main
 
 import (
