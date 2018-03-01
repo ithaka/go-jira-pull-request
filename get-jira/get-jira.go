@@ -10,12 +10,6 @@ import (
 	"encoding/json"
 )
 
-type people struct {
-	Number int `json:"number"`
-}
-
-
-
 type JIRAResponse struct {
 	Key    string `json:"key"`
 	Fields struct {
@@ -32,11 +26,9 @@ func getEnv(key, fallback string) string {
 }
 
 func main() {
-//JIRA_LOGIN:$JIRA_PASSWORD
 	jiraUserId := getEnv("JIRA_LOGIN", "login")
 	jiraPassword := getEnv("JIRA_PASSWORD", "password")
 
-// https://jira.jstor.org/rest/api/2/issue/CORE-5339
 	url := "https://jira.jstor.org/rest/api/2/issue/CORE-5339"
 
 	jiraClient := http.Client{
@@ -48,7 +40,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type","application/json")
 	res, getErr := jiraClient.Do(req)
@@ -61,16 +53,13 @@ func main() {
 		log.Fatal(readErr)
 	}
 
-	//fmt.Println(string(body))
 	jiraResponse := JIRAResponse{}
 	jsonErr := json.Unmarshal(body, &jiraResponse)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
-	//'{"key": .key, "summary": .fields.summary, "description": .fields.description}'
 
-
-	fmt.Println(jiraResponse.Key)
+	fmt.Println(jiraResponse.Key) 
 	fmt.Println(jiraResponse.Fields.Summary)
 	fmt.Println(jiraResponse.Fields.Description)
 }
