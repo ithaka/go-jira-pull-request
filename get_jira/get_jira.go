@@ -65,7 +65,7 @@ func GetJiraResponse(jiraClient http.Client, req *http.Request) JIRAResponse {
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		log.Fatal(readErr)
-		panic(getErr)
+		panic(readErr)
 	}
 
 	jsonErr := json.Unmarshal(body, &jiraResponse)

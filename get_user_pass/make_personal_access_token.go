@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
+	"encoding/json"
 	"golang.org/x/crypto/ssh/terminal"
 	"log"
 	"path/filepath"
 	"net/http"
+	"io/ioutil"
+	"time"
 )
 
 var (
@@ -23,7 +25,7 @@ const (
 
 func main() {
 	username, password, otp := credentials()
-	fmt.Printf("Username: %s, Password: %s, OTP: %s\n", username, password, otp)
+	fmt.Printf("Username: %s, Password: %s, OTP: %s\n", username, strings.Repeat("*", len(password)), otp)
 	makePersonalAccessToken(username, password, otp)
 }
 
@@ -97,6 +99,9 @@ func configsFile() string {
 
 	return configsFile
 }
+type AuthorizationEntry struct {
+	Token string `json:"token"`
+}
 
 func makePersonalAccessToken(username string, password string, twoFactorCode string) {
 	body := strings.NewReader(`{"scopes":["repo"],"note":"Demo"}`)
@@ -105,19 +110,34 @@ func makePersonalAccessToken(username string, password string, twoFactorCode str
 		// handle err
 	}
 	req.SetBasicAuth(username, password)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	if twoFactorCode != "" {
 		req.Header.Set("X-GitHub-OTP", twoFactorCode)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	githubClient := http.Client{
+		Timeout: time.Second * 15, // Maximum of 15 secs
+	}
+
+
+	resp, err := githubClient.Do(req)
 	Check(err)
 
 	if resp.StatusCode == http.StatusUnauthorized && strings.HasPrefix(resp.Header.Get(headerOTP), "required") {
 		fmt.Errorf(" status code: %s, headerOTP: %s", resp.StatusCode, resp.Header.Get(headerOTP) )
 	}
+	respBody, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		log.Fatal(readErr)
+		panic(readErr)
+	}
+	auth := &AuthorizationEntry{}
 
+
+	json.Unmarshal(respBody, &auth)
+	fmt.Printf("Authorization Token: %s", auth.Token)
 	defer resp.Body.Close()
 
 }
