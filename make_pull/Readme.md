@@ -9,6 +9,11 @@ make_pull then takes the GitHub's user's login as the first and only argument, a
 make_pull mynameisawesome
 ```
 
+## Personal Access tokens
+
+Check them out here https://github.com/settings/tokens
+
+
 # OAuth #
 
 The first thing to know is that your API Token (found in https://github.com/settings/admin) is not the same token used by OAuth. They are different tokens and you will need to generate an OAuth token to be authorized.
