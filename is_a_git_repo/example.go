@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	pwd := commandline.Pwd()
+	pwd, _ := commandline.Pwd()
 	switch {
 	case commandline.IsGitRepo():
 		fmt.Println("Your local directory", pwd, "is a git repo")
